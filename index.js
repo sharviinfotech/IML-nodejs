@@ -23,7 +23,7 @@ app.post("/", (req, res) => {
 });
 require("./app/routes/equipment.routes.js")(app);
 require("./app/routes/calibration.routes.js")(app);
-require("./app/routes/user.routes.js")(app);
+require("./app/routes/order.routes.js")(app);
 const PORT = process.env.PORT || 9091;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}.`);
