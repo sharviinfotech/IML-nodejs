@@ -1,8 +1,8 @@
 module.exports = {
-    HOST: "localhost",
+    HOST: "imlrds.c9cowauu46ab.ap-south-1.rds.amazonaws.com",
     PORT: "1433",
-    USER: "sa",
-    PASSWORD: "admin@123",
+    USER: "sharviinfotech",
+    PASSWORD: "sharviinfotech",
     DB: "iml",
     dialect: "mssql",
     pool: {
