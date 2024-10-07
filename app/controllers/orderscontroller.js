@@ -126,10 +126,171 @@ const updatingTotalResult = async (req, res) => {
   }
 };
 
+// Fetch Equipment Master Data
+const getEquipmentMaster = async (req, res) => {
+  try {
+    console.log('Fetching equipment master data');
+    
+    // Call the third-party service to get equipment master data
+    const result = await thirdPartyService.fetchEquipmentMaster();
+
+    console.log('Equipment master data fetched successfully:', JSON.stringify(result, null, 2));
+    
+    res.status(200).json({
+      status: true,
+      data: result,
+      message: 'Equipment master data fetched successfully!',
+    });
+  } catch (error) {
+    console.error('Error in getEquipmentMaster:', error.message);
+    res.status(500).json({
+      status: false,
+      message: 'Failed to fetch equipment master data.',
+      error: error.message,
+    });
+  }
+};
+
+// Post Equipment Master Data
+const postEquipmentMaster = async (req, res) => {
+  try {
+    const equipmentPayload = req.body; // Payload from client
+    console.log('Posting equipment master data:', JSON.stringify(equipmentPayload, null, 2));
+    
+    const result = await thirdPartyService.postEquipmentMaster(equipmentPayload);
+
+    res.status(200).json({
+      status: true,
+      data: result,
+      message: 'Equipment master data posted successfully!',
+    });
+  } catch (error) {
+    console.error('Error in postEquipmentMaster:', error.message);
+    res.status(500).json({
+      status: false,
+      message: 'Failed to post equipment master data.',
+      error: error.message,
+    });
+  }
+};
+
+// Get Lot Reports
+const transactionCompleted = async (req, res) => {
+  try {
+    const filters = req.body;
+    console.log('Fetching lot reports with filters:', JSON.stringify(filters, null, 2));
+
+    // Send filters to third-party service
+    const result = await thirdPartyService.fetchPosttransactionCompleted(filters);
+
+    // Ensure the data is returned correctly
+    console.log('Lot reports fetched successfully:', JSON.stringify(result, null, 2));
+
+    res.status(200).json({
+      status: true,
+      data: result,  // Make sure the data is returned here
+      message: 'Lot reports fetched successfully!',
+    });
+  } catch (error) {
+    console.error('Error in getLotReports:', error.message);
+    res.status(500).json({
+      status: false,
+      message: 'Failed to fetch lot reports.',
+      error: error.message,
+    });
+  }
+};
+
+// Get resultrecord
+const resultrecord = async (req, res) => {
+  try {
+    const filters = req.body;
+    console.log('Fetching lot reports with filters:', JSON.stringify(filters, null, 2));
+
+    // Send filters to third-party service
+    const result = await thirdPartyService.fetchresultrecord(filters);
+
+    // Ensure the data is returned correctly
+    console.log('Lot reports fetched successfully:', JSON.stringify(result, null, 2));
+
+    res.status(200).json({
+      status: true,
+      data: result,  // Make sure the data is returned here
+      message: 'Lot reports fetched successfully!',
+    });
+  } catch (error) {
+    console.error('Error in getLotReports:', error.message);
+    res.status(500).json({
+      status: false,
+      message: 'Failed to fetch lot reports.',
+      error: error.message,
+    });
+  }
+};
+
+// Usercreation
+const usercreation = async (req, res) => {
+  try {
+    const filters = req.body;
+    console.log('Fetching lot reports with filters:', JSON.stringify(filters, null, 2));
+
+    // Send filters to third-party service
+    const result = await thirdPartyService.fetchusercreation(filters);
+
+    // Ensure the data is returned correctly
+    console.log('Lot reports fetched successfully:', JSON.stringify(result, null, 2));
+
+    res.status(200).json({
+      status: true,
+      data: result,  // Make sure the data is returned here
+      message: 'Lot reports fetched successfully!',
+    });
+  } catch (error) {
+    console.error('Error in getLotReports:', error.message);
+    res.status(500).json({
+      status: false,
+      message: 'Failed to fetch lot reports.',
+      error: error.message,
+    });
+  }
+};
+
+
+const getusercreation = async (req, res) => {
+  try {
+    console.log('Fetching getusercreation');
+    
+    // Optionally pass req.query or req.body if needed by the third-party service
+    const result = await thirdPartyService.getusercreation(req.query);  // or req.body
+    
+    console.log('getusercreation data fetched successfully:', JSON.stringify(result, null, 2));
+    
+    res.status(200).json({
+      status: true,
+      data: result,
+      message: 'getusercreation data fetched successfully!',
+    });
+  } catch (error) {
+    console.error('Error in getusercreation:', error.message);
+    res.status(500).json({
+      status: false,
+      message: 'Failed to fetch getusercreation.',
+      error: error.message,
+    });
+  }
+};
+
+
 module.exports = {
   assignLot,
   createLot,
   getLotReports,
   updateResultRecording,
   updatingTotalResult,
+  getEquipmentMaster,
+  postEquipmentMaster,
+  transactionCompleted,
+  resultrecord,
+  usercreation,
+  getusercreation
 };

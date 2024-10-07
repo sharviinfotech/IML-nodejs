@@ -5,8 +5,8 @@ const Calibration = db.calibration;
 const Equipment = db.equipments;
 const Op = db.Sequelize.Op;
 
-exports.create = (req, res)  => {
- console.log("Create Calibration");
+exports.create = (req, res) => {
+    console.log("Create Calibration");
 
     if (isEmpty(req.body)) {
         res.status(400).send({
@@ -16,23 +16,28 @@ exports.create = (req, res)  => {
 
     const calibrationData = req.body.calibrationArray;
 
+
     const calibration = req.body.calibrationArray.map(item => ({
-            'equipment_id': item.equipment_id,
-            'equipment_name': item.equipment_name,
-            'type': item.type,
-            'make': item.make,
-            'model': item.model,
-            'specification': item.specification,
-            'technician_name': item.technician_name,
-            'cal_sent_date': item.cal_sent_date,
-            'cal_date': item.cal_date,
-            'certificate': item.certificate,
-            'status': item.status,
-            'rejection_remarks': item.rejection_remarks,
-            'rejection_date': item.rejection_date
+        'equipment_id': item.equipment_id,
+        'equipment_name': item.equipment_name,
+        'type': item.type,
+        'make': item.make,
+        'model': item.model,
+        'specification': item.specification,
+        'technician_name': item.technician_name,
+        'cal_sent_date': item.cal_sent_date,
+        'cal_date': item.cal_date,
+        'certificate': item.certificate,
+        'status': item.status,
+        'rejection_remarks': item.rejection_remarks,
+        'rejection_date': item.rejection_date
     }));
 
-    Calibration.bulkCreate(calibration,(req,res) => {
+    console.log("data start1");
+    console.log(calibration);
+    console.log("data end2");
+
+    Calibration.bulkCreate(calibration, (req, res) => {
         if (err) {
             res.status(500).send({
                 message:
@@ -46,37 +51,30 @@ exports.create = (req, res)  => {
 
 exports.getAll = (req, res) => {
     console.log("Get ALL Calibration");
-
     const filter = req.body.filter;
     console.log(req.body.filter);
-    let equipmentFilter = {}
+    let equipmentFilter = {};
     let calibrationFilter = {};
-
-    if(!isEmpty(req.body)) {
+    if (!isEmpty(req.body)) {
         equipmentFilter = filter.equipment;
         calibrationFilter = filter.calibration;
     }
-
     Equipment.findAll({
         where: equipmentFilter,
         include: [{
             model: Calibration,
             required: true,
-            where:calibrationFilter
+            where: calibrationFilter
         }]
     }).then(data => {
-            console.log("HIi");
-            const responseData = {"status":true,"data":data};
-            console.log(responseData);
-            res.status(200).json(responseData);
-        })
-        .catch(err => {
-            console.log(err);
-            res.status(500).send({
-                message:
-                    err.message || "Some error occurred while retrieving Calibrations."
-            });
-        });
+        console.log("HIi");
+        const responseData = { "status": true, "data": data };
+        console.log(responseData);
+        res.status(200).json(responseData);
+    }).catch(err => {
+        console.log(err);
+        res.status(500).send({ message: err.message || "Some error occurred while retrieving Calibrations." });
+    });
 }
 
 exports.getOne = (req, res) => {
@@ -103,29 +101,29 @@ exports.bulkUpdate = (req, res) => {
             message: "Content can not be empty!"
         });
     }
-     const reqData = req.body.calibrationArray;;
+    const reqData = req.body.calibrationArray;;
     //console.log(reqData);
     reqData.forEach(element => {
-        if(!isEmpty(element) ) { //&& lodash.has(element,'id')
-            console.log("Element is",element);
+        if (!isEmpty(element)) { //&& lodash.has(element,'id')
+            console.log("Element is", element);
             const id = element.id;
-            console.log("Id is",id);
+            console.log("Id is", id);
             const data = element;
             delete data.id;
-            console.log("Final Date",data);
-            Calibration.update(data,{
-                where:{id:id}
+            console.log("Final Date", data);
+            Calibration.update(data, {
+                where: { id: id }
             }).catch(err => {
                 res.status(500).send({
                     message: "Error updating Tutorial with id=" + id
                 });
             });
-        }else{
+        } else {
             console.log(element);
         }
-     })
+    })
 
-    res.status(200).send({"status":true,"Message":"Records are updated successfully"});
+    res.status(200).send({ "status": true, "Message": "Records are updated successfully" });
 
 }
 
@@ -158,16 +156,16 @@ exports.delete = (req, res) => {
     const id = req.params.id;
     Calibration.destroy({ where: { id: id } })
         .then(num => {
-                if (num == 1) {
-                    res.send({
-                        message: "Calibration was deleted successfully!"
-                    });
-                } else {
-                    res.send({
-                        message: `Cannot delete Tutorial with id=${id}. Maybe Calibration was not found!`
-                    });
-                }
+            if (num == 1) {
+                res.send({
+                    message: "Calibration was deleted successfully!"
+                });
+            } else {
+                res.send({
+                    message: `Cannot delete Tutorial with id=${id}. Maybe Calibration was not found!`
+                });
             }
+        }
         )
         .catch(err => {
             console.log(err);
