@@ -8,9 +8,10 @@ const THIRD_PARTY_API_URL_EQUIPMENT_MASTER = process.env.THIRD_PARTY_API_URL_EQU
 const THIRD_PARTY_API_URL_POST_EQUIPMENT_MASTER = process.env.THIRD_PARTY_API_URL_POST_EQUIPMENT_MASTER || "http://10.10.6.113:8000/equipment/master?sap-client=234";
 const THIRD_PARTY_API_URL_GET = process.env.THIRD_PARTY_API_URL_GET || "http://10.10.6.113:8000/iml/lot/det?sap-client=234";
 const THIRD_PARTY_API_URL_POST = process.env.THIRD_PARTY_API_URL_POST || "http://10.10.6.113:8000/iml/lot/det?sap-client=234";
+const THIRD_PARTY_API_POST_UD = process.env.THIRD_PARTY_API_POST_UD || "http://10.10.6.113:8000/iml/usaged/use?sap-client=234";
 const THIRD_PARTY_API_URL_RESULT_RECORDING = process.env.THIRD_PARTY_API_URL_RESULT_RECORDING || "http://10.10.6.113:8000/iml/lot/resultRecording";
 const THIRD_PARTY_USERNAME = process.env.THIRD_PARTY_USERNAME || "dev00";
-const THIRD_PARTY_PASSWORD = process.env.THIRD_PARTY_PASSWORD || "Dev@Hbl#1977";
+const THIRD_PARTY_PASSWORD = process.env.THIRD_PARTY_PASSWORD || "Vision@2024";
 
 // Function to get Authorization Header
 const getAuthHeader = () => {
@@ -43,6 +44,27 @@ const fetchGetOrders = async () => {
   }
 };
 
+// Fetch POST Orders
+const fetchsubmitresult = async (body) => {
+  try {
+    if (!THIRD_PARTY_API_POST_UD) {
+      throw new Error('Third-party POST API URL is missing');
+    }
+
+    console.log('Sending POST payload to third-party API:', JSON.stringify(body, null, 2));
+    
+    const response = await axios.post(THIRD_PARTY_API_POST_UD, body, {
+      headers: {
+        'Authorization': getAuthHeader(),
+      },
+    });
+
+    console.log('POST Response from third-party API:', JSON.stringify(response.data, null, 2));
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, 'fetchPostOrders');
+  }
+};
 // Fetch POST Orders
 const fetchPostOrders = async (body) => {
   try {
@@ -231,6 +253,7 @@ const getusercreation = async (queryParams) => {
 };
 
 
+
 // Export Functions
 module.exports = {
   fetchGetOrders,
@@ -241,5 +264,6 @@ module.exports = {
   fetchPosttransactionCompleted,
   fetchresultrecord,
   fetchusercreation,
-  getusercreation
+  getusercreation,
+  fetchsubmitresult
 };

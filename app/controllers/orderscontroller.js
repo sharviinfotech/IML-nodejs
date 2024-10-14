@@ -1,6 +1,32 @@
 const thirdPartyService = require('../services/thirdPartyService');
 
-// Create Lot
+// submitresult
+const submitresult = async (req, res) => {
+  try {
+    // Check if the payload matches third-party service expectations
+    const filters = req.body;
+
+    console.log('submitresult lot with payload:', JSON.stringify(filters, null, 2));
+
+    // Send payload to third-party service
+    const result = await thirdPartyService.fetchsubmitresult(filters);
+
+    console.log('Lot created successfully:', JSON.stringify(result, null, 2));
+    res.status(200).json({
+      status: true,
+      data: result,
+      message: 'Lot created successfully!',
+    });
+  } catch (error) {
+    console.error('Error in createLot:', error.message);
+    res.status(500).json({
+      status: false,
+      message: 'Failed to create lot.',
+      error: error.message,
+    });
+  }
+};
+
 const createLot = async (req, res) => {
   try {
     // Check if the payload matches third-party service expectations
@@ -292,5 +318,6 @@ module.exports = {
   transactionCompleted,
   resultrecord,
   usercreation,
-  getusercreation
+  getusercreation,
+  submitresult
 };
