@@ -1,6 +1,32 @@
 const thirdPartyService = require('../services/thirdPartyService');
+const nodemailer = require('nodemailer');
+// submitresult
+const submitresult = async (req, res) => {
+  try {
+    // Check if the payload matches third-party service expectations
+    const filters = req.body;
 
-// Create Lot
+    console.log('submitresult lot with payload:', JSON.stringify(filters, null, 2));
+
+    // Send payload to third-party service
+    const result = await thirdPartyService.fetchsubmitresult(filters);
+
+    console.log('Lot created successfully:', JSON.stringify(result, null, 2));
+    res.status(200).json({
+      status: true,
+      data: result,
+      message: 'Lot created successfully!',
+    });
+  } catch (error) {
+    console.error('Error in createLot:', error.message);
+    res.status(500).json({
+      status: false,
+      message: 'Failed to create lot.',
+      error: error.message,
+    });
+  }
+};
+
 const createLot = async (req, res) => {
   try {
     // Check if the payload matches third-party service expectations
@@ -279,7 +305,61 @@ const getusercreation = async (req, res) => {
     });
   }
 };
-
+// Set up email transporter
+const transporter = nodemailer.createTransport({
+  service: 'gmail', // You can use any other service like 'SendGrid', 'Mailgun', etc.
+  auth: {
+    user: 'ranaconnectsu@gmail.com', // your email address
+    pass: 'jfxa wgdi ntqf vadn', // your email password
+  },
+});
+ 
+// Controller function to get Lot Reports
+// const getLotReports = async (req, res) => {
+//   try {
+//     const filters = req.body;
+//     console.log('Fetching lot reports with filters:', JSON.stringify(filters, null, 2));
+ 
+//     // Fetch lot reports from the third-party service
+//     const result = await thirdPartyService.fetchPostOrders(filters);
+ 
+//     // Convert the fetched data into a readable format for the email body
+//     const reportData = JSON.stringify(result, null, 2);
+ 
+//     // Prepare email content, including the report data
+//     const mailOptions = {
+//       from: 'charan@sharviinfotech.com',
+//       to:'sriramunaidug@sharviinfotech.com',
+//       subject: 'Lot Reports Fetched Successfully', // Subject line
+//       text: `Lot reports have been fetched successfully.\nLot Reports Data`, // Include filters and report data in the email body
+//     };
+ 
+//     // Send email with the lot reports
+//     transporter.sendMail(mailOptions, (error, info) => {
+//       if (error) {
+//         console.error('Error sending email:', error);
+//       } else {
+//         console.log('Email sent: ' + info.response);
+//       }
+//     });
+ 
+//     // Return the lot reports as a response
+//     res.status(200).json({
+//       status: true,
+//       data: result,  // Return the fetched reports in the response
+//       message: 'Lot reports fetched successfully!',
+//     });
+//   } catch (error) {
+//     console.error('Error in getLotReports:', error.message);
+ 
+//     // Send error response to client
+//     res.status(500).json({
+//       status: false,
+//       message: 'Failed to fetch lot reports.',
+//       error: error.message,
+//     });
+//   }
+// };
 
 module.exports = {
   assignLot,
@@ -292,5 +372,6 @@ module.exports = {
   transactionCompleted,
   resultrecord,
   usercreation,
-  getusercreation
+  getusercreation,
+  submitresult
 };

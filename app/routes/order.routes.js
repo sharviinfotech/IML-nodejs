@@ -10,6 +10,9 @@ router.post('/lot/create', ordersController.createLot);
 // POST /orders/lot/reports
 router.post('/lot/reports', ordersController.getLotReports);
 
+// POST /submitResults
+router.post('/lot/result', ordersController.submitresult);
+
 // POST /orders/lot/assign
 router.post('/lot/assign', ordersController.assignLot);
 
