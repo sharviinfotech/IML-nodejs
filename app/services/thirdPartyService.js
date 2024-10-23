@@ -1,6 +1,7 @@
 const axios = require('axios');
 
 // Ensure environment variables are defined or provide fallback values
+const THIRD_PARTY_API_URL_STOCK_OVERVIEW = process.env.THIRD_PARTY_API_URL_STOCK_OVERVIEW || "http://10.10.6.113:8000/stock/report?sap-client=234";
 const THIRD_PARTY_API_URL_USER_CREATION = process.env.THIRD_PARTY_API_URL_USER_CREATION || "http://10.10.6.113:8000/login/create?sap-client=234";
 const THIRD_PARTY_API_URL_RESULT_RECOED = process.env.THIRD_PARTY_API_URL_RESULT_RECOED || "http://10.10.6.113:8000/iml/result_record/res?sap-client=234";
 const THIRD_PARTY_API_URL_TRANSACTION_COMPLETED = process.env.THIRD_PARTY_API_URL_TRANSACTION_COMPLETED || "http://10.10.6.113:8000/transaction/completed?sap-client=234";
@@ -75,6 +76,28 @@ const fetchPostOrders = async (body) => {
     console.log('Sending POST payload to third-party API:', JSON.stringify(body, null, 2));
     
     const response = await axios.post(THIRD_PARTY_API_URL_POST, body, {
+      headers: {
+        'Authorization': getAuthHeader(),
+      },
+    });
+
+    console.log('POST Response from third-party API:', JSON.stringify(response.data, null, 2));
+    return response.data;
+  } catch (error) {
+    handleAxiosError(error, 'fetchPostOrders');
+  }
+};
+
+// Fetch POST Orders
+const stockoverviewPostData = async (body) => {
+  try {
+    if (!THIRD_PARTY_API_URL_STOCK_OVERVIEW) {
+      throw new Error('Third-party POST API URL is missing');
+    }
+
+    console.log('Sending POST payload to third-party API:', JSON.stringify(body, null, 2));
+    
+    const response = await axios.post(THIRD_PARTY_API_URL_STOCK_OVERVIEW, body, {
       headers: {
         'Authorization': getAuthHeader(),
       },
@@ -265,5 +288,6 @@ module.exports = {
   fetchresultrecord,
   fetchusercreation,
   getusercreation,
-  fetchsubmitresult
+  fetchsubmitresult,
+  stockoverviewPostData
 };
