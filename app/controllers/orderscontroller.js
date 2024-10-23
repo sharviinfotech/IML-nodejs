@@ -80,6 +80,32 @@ const getLotReports = async (req, res) => {
   }
 };
 
+const stockOverview = async (req, res) => {
+  try {
+    const filters = req.body;
+    console.log('Fetching lot reports with filters:', JSON.stringify(filters, null, 2));
+
+    // Send filters to third-party service
+    const result = await thirdPartyService.stockoverviewPostData(filters);
+
+    // Ensure the data is returned correctly
+    console.log('Lot reports fetched successfully:', JSON.stringify(result, null, 2));
+
+    res.status(200).json({
+      status: true,
+      data: result,  // Make sure the data is returned here
+      message: 'Lot reports fetched successfully!',
+    });
+  } catch (error) {
+    console.error('Error in getLotReports:', error.message);
+    res.status(500).json({
+      status: false,
+      message: 'Failed to fetch lot reports.',
+      error: error.message,
+    });
+  }
+};
+
 
 // Update Result Recording
 const updateResultRecording = async (req, res) => {
@@ -314,52 +340,78 @@ const transporter = nodemailer.createTransport({
   },
 });
  
-// Controller function to get Lot Reports
+// Sample function to send an email with a table containing sample data
 // const getLotReports = async (req, res) => {
 //   try {
-//     const filters = req.body;
-//     console.log('Fetching lot reports with filters:', JSON.stringify(filters, null, 2));
- 
-//     // Fetch lot reports from the third-party service
-//     const result = await thirdPartyService.fetchPostOrders(filters);
- 
-//     // Convert the fetched data into a readable format for the email body
-//     const reportData = JSON.stringify(result, null, 2);
- 
-//     // Prepare email content, including the report data
+//     // Sample data to display in the email table
+//     const sampleData = [
+//       {
+//         dateOfReceipt: '2024-10-22',
+//         sampleDescription: 'Sample A',
+//         quantityReceived: '50',
+//         expectedDateOfCompletion: '2024-10-30'
+//       },
+//       {
+//         dateOfReceipt: '2024-10-21',
+//         sampleDescription: 'Sample B',
+//         quantityReceived: '100',
+//         expectedDateOfCompletion: '2024-10-29'
+//       },
+//       {
+//         dateOfReceipt: '2024-10-20',
+//         sampleDescription: 'Sample C',
+//         quantityReceived: '75',
+//         expectedDateOfCompletion: '2024-10-28'
+//       }
+//     ];
+
+//     // Prepare email content with an HTML table containing the sample data
 //     const mailOptions = {
 //       from: 'charan@sharviinfotech.com',
-//       to:'sriramunaidug@sharviinfotech.com',
-//       subject: 'Lot Reports Fetched Successfully', // Subject line
-//       text: `Lot reports have been fetched successfully.\nLot Reports Data`, // Include filters and report data in the email body
+//       to: 'charan@sharviinfotech.com',
+//       subject: 'Sample Lot Reports',
+//       html: `
+//         <h3>Sample Lot Reports</h3>
+//         <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse;">
+//           <thead>
+//             <tr>
+//               <th>Date of receipt</th>
+//               <th>Sample description</th>
+//               <th>Quantity received</th>
+//               <th>Expected date of completion</th>
+//             </tr>
+//           </thead>
+//           <tbody>
+//             ${sampleData.map(item => `
+//               <tr>
+//                 <td>${item.dateOfReceipt}</td>
+//                 <td>${item.sampleDescription}</td>
+//                 <td>${item.quantityReceived}</td>
+//                 <td>${item.expectedDateOfCompletion}</td>
+//               </tr>
+//             `).join('')}
+//           </tbody>
+//         </table>
+//       `,
 //     };
- 
-//     // Send email with the lot reports
+
+//     // Send the email
 //     transporter.sendMail(mailOptions, (error, info) => {
 //       if (error) {
 //         console.error('Error sending email:', error);
+//         res.status(500).json({ message: 'Failed to send email', error });
 //       } else {
 //         console.log('Email sent: ' + info.response);
+//         res.status(200).json({ message: 'Email sent successfully!' });
 //       }
 //     });
- 
-//     // Return the lot reports as a response
-//     res.status(200).json({
-//       status: true,
-//       data: result,  // Return the fetched reports in the response
-//       message: 'Lot reports fetched successfully!',
-//     });
+
 //   } catch (error) {
-//     console.error('Error in getLotReports:', error.message);
- 
-//     // Send error response to client
-//     res.status(500).json({
-//       status: false,
-//       message: 'Failed to fetch lot reports.',
-//       error: error.message,
-//     });
+//     console.error('Error in sendSampleEmail:', error.message);
+//     res.status(500).json({ message: 'Failed to send email', error: error.message });
 //   }
 // };
+
 
 module.exports = {
   assignLot,
@@ -373,5 +425,7 @@ module.exports = {
   resultrecord,
   usercreation,
   getusercreation,
-  submitresult
+  submitresult,
+  stockOverview
+  // sendSampleEmail
 };

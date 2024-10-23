@@ -10,6 +10,8 @@ router.post('/lot/create', ordersController.createLot);
 // POST /orders/lot/reports
 router.post('/lot/reports', ordersController.getLotReports);
 
+// router.post('/lot/sendEmail', ordersController.sendSampleEmail);
+
 // POST /submitResults
 router.post('/lot/result', ordersController.submitresult);
 
@@ -42,6 +44,9 @@ router.get('/lot/resultRecording/:inspectLot', ordersController.updateResultReco
 
 // POST /orders/lot/updateResultRecordingTotal
 router.post('/lot/updateResultRecordingTotal', ordersController.updatingTotalResult);
+
+// POST /orders/lot/stock-overview
+router.post('/lot/stock-overview', ordersController.stockOverview);
 
 
   app.use('/api/orders', router);
